@@ -42,43 +42,33 @@ class _SignUpState extends State<SignUp> {
     super.dispose();
   }
 
-///On sign up
-void _signUp() async {
-  Utils.hiddenKeyboard(context);
-  setState(() {
-    _errorID = UtilValidator.validate(_textIDController.text);
-    _errorPass = UtilValidator.validate(_textPassController.text);
-    _errorEmail = UtilValidator.validate(
-      _textEmailController.text,
-      type: ValidateType.email,
-    );
-  });
-  if (_errorID == null && _errorPass == null && _errorEmail == null) {
-    final result = await AppBloc.userCubit.onRegister(
-      username: _textIDController.text,
-      password: _textPassController.text,
-      email: _textEmailController.text,
-    );
-    if (result) {
-      if (!mounted) return;
-      final loginResponse = await AppBloc.loginCubit.onLogin(
+  ///On sign up
+  void _signUp() async {
+    Utils.hiddenKeyboard(context);
+    setState(() {
+      _errorID = UtilValidator.validate(_textIDController.text);
+      _errorPass = UtilValidator.validate(_textPassController.text);
+      _errorEmail = UtilValidator.validate(
+        _textEmailController.text,
+        type: ValidateType.email,
+      );
+    });
+    if (_errorID == null && _errorPass == null && _errorEmail == null) {
+      final result = await AppBloc.userCubit.onRegister(
         username: _textIDController.text,
         password: _textPassController.text,
+        email: _textEmailController.text,
       );
-      // Ici, vérifiez la réponse du serveur pour voir si un OTP est nécessaire
-      bool otpRequired = true; // Ceci est juste un exemple, vous devriez vérifier la réponse réelle du serveur
-      if (otpRequired) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => OTPScreen(email: _textEmailController.text)),
+      if (result) {
+        if (!mounted) return;
+        AppBloc.loginCubit.onLogin(
+          username: _textIDController.text,
+          password: _textPassController.text,
         );
-      } else {
         Navigator.pop(context);
       }
     }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
