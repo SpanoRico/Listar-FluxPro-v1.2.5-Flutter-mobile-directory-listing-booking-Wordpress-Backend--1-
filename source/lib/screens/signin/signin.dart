@@ -52,20 +52,29 @@ class _SignInState extends State<SignIn> {
     Navigator.pushNamed(context, Routes.signUp);
   }
 
-  ///On login
-  void _login() async {
-    Utils.hiddenKeyboard(context);
-    setState(() {
-      _errorID = UtilValidator.validate(_textIDController.text);
-      _errorPass = UtilValidator.validate(_textPassController.text);
-    });
-    if (_errorID == null && _errorPass == null) {
-      AppBloc.loginCubit.onLogin(
-        username: _textIDController.text,
-        password: _textPassController.text,
+///On login
+void _login() async {
+  Utils.hiddenKeyboard(context);
+  setState(() {
+    _errorID = UtilValidator.validate(_textIDController.text);
+    _errorPass = UtilValidator.validate(_textPassController.text);
+  });
+  if (_errorID == null && _errorPass == null) {
+    final response = await AppBloc.loginCubit.onLogin(
+      username: _textIDController.text,
+      password: _textPassController.text,
+    );
+    // Ici, vérifiez la réponse du serveur pour voir si un OTP est nécessaire
+    bool otpRequired = true; // Ceci est juste un exemple, vous devriez vérifier la réponse réelle du serveur
+    if (otpRequired) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => OTPScreen(email: _textIDController.text)),
       );
     }
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
