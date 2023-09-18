@@ -1,0 +1,88 @@
+/*
+Theme Name:        Front Child
+Theme URI:         https://demo2.madrasthemes.com/front-demos/main/
+Author:            MadrasThemes
+Author URI:        https://themeforest.net/user/madrasthemes/
+Description:       Multipurpose Responsive Theme
+Requires at least: WordPress 5.0
+Template:          front
+Version:           1.0.16
+License:           GNU General Public License v2 or later
+License URI:       LICENSE
+Text Domain:       front-child
+Tags:              two-columns, left-sidebar, right-sidebar, custom-background, custom-colors, custom-header, custom-menu, featured-images, full-width-template, threaded-comments, accessibility-ready, rtl-language-support, footer-widgets, sticky-post, theme-options
+*/
+
+body {
+    font-weight: 200;
+}
+
+p {
+    color: black;
+}
+
+.docs .syntaxhighlighter {
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.docs h1.entry-title {
+    font-size: 2.5rem;
+}
+
+.docs .entry-content h2,
+.docs .entry-content .h2 {
+    font-size: 1.875rem;
+    font-weight: 600;
+}
+
+.docs .entry-content h3,
+.docs .entry-content .h3 {
+    font-size: 1.3125rem;
+    font-weight: 600;
+}
+
+.docs .entry-content h4,
+.docs .entry-content .h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.docs ol>li,
+.docs ul>li {
+    color: black;
+    line-height: 35px;
+}
+
+.docs .wedocs-sidebar ul>li>a {
+    line-height: 35px;
+    color: #77838f
+}
+
+.docs li.current_page_parent>a,
+.docs li.current_page_item>a,
+.docs ul>li.docs-item-open>a,
+.docs ul>li.active a {
+    color: #377dff;
+    font-weight: 400;
+}
+
+.docs ul.children {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+
+.docs ul.children a {
+    padding-left: 15px !important;
+}
+
+.front-docs-pages header.js-header-fix-moment {
+    position: unset;
+}
+
+.docs-template-default.single.single-docs #content {
+    padding-top: 80px !important;
+}
