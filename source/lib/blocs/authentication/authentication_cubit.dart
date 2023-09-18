@@ -65,4 +65,24 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     ///Delete user
     AppBloc.userCubit.onDeleteUser();
   }
+
+Future<void> requestOTP(String email) async {
+  final result = await UserRepository.requestOTP(email);
+  if (result) {
+    emit(AuthenticationState.otpRequested);
+  } else {
+    emit(AuthenticationState.otpRequestFailed);
+  }
+}
+
+Future<void> verifyOTP(String email, String otp) async {
+  final result = await UserRepository.verifyOTP(email, otp);
+  if (result) {
+    emit(AuthenticationState.otpVerified);
+  } else {
+    emit(AuthenticationState.otpVerificationFailed);
+  }
+}
+
+
 }

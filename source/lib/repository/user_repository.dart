@@ -144,4 +144,36 @@ class UserRepository {
   static Future<bool> deleteUser() async {
     return await Preferences.remove(Preferences.user);
   }
+
+  ///OTP
+Future<bool> requestOTP(String email) async {
+  final response = await http.post(
+    Uri.parse('https://listing.crowdaa.net/wp-json/myplugin/v1/generate_otp'),
+    body: {'email': email},
+  );
+
+  if (response.statusCode == 200) {
+    final result = json.decode(response.body);
+    return result['status'] == 'success';
+  } else {
+    return false;
+  }
 }
+
+Future<bool> verifyOTP(String email, String otp) async {
+  final response = await http.post(
+    Uri.parse('https://listing.crowdaa.net/wp-json/myplugin/v1/verify_otp'),
+    body: {'email': email, 'otp': otp},
+  );
+
+  if (response.statusCode == 200) {
+    final result = json.decode(response.body);
+    return result['status'] == 'success';
+  } else {
+    return false;
+  }
+}
+
+
+}
+
