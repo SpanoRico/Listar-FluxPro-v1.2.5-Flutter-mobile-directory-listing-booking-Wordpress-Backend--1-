@@ -7,7 +7,7 @@ class AppBloc {
   static final userCubit = UserCubit();
   static final languageCubit = LanguageCubit();
   static final themeCubit = ThemeCubit();
-  static final authenticateCubit = AuthenticationCubit();
+  static final authenticateCubit = AuthenticationCubit(UserRepository());
   static final loginCubit = LoginCubit();
   static final homeCubit = HomeCubit();
   static final wishListCubit = WishListCubit();
