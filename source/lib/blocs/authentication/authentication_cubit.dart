@@ -6,9 +6,7 @@ import 'package:listar_flutter_pro/repository/repository.dart';
 import 'package:listar_flutter_pro/utils/utils.dart';
 
 class AuthenticationCubit extends Cubit<AuthenticationState> {
-  final UserRepository _userRepository;
-
-  AuthenticationCubit(this._userRepository) : super(AuthenticationState.loading);
+  AuthenticationCubit() : super(AuthenticationState.loading);
 
   Future<void> onCheck() async {
     emit(AuthenticationState.loading);
@@ -16,7 +14,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     UserModel? user = await AppBloc.userCubit.onLoadUser();
 
     if (user != null) {
-      final result = await _userRepository.validateToken();
+      final result = await UserRepository.validateToken();
       if (result) {
         emit(AuthenticationState.success);
       } else {
@@ -41,7 +39,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
 
   Future<bool> requestOTP(String email) async {
     emit(AuthenticationState.loading);
-    final result = await _userRepository.requestOTP(email);
+    final result = await UserRepository.requestOTP(email);
     if (result) {
       emit(AuthenticationState.otpRequested);
       return true;
@@ -53,7 +51,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
 
   Future<bool> verifyOTP(String email, String otp) async {
     emit(AuthenticationState.loading);
-    final result = await _userRepository.verifyOTP(email, otp);
+    final result = await UserRepository.verifyOTP(email, otp);
     if (result) {
       emit(AuthenticationState.otpVerified);
       return true;
@@ -63,3 +61,4 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     }
   }
 }
+
