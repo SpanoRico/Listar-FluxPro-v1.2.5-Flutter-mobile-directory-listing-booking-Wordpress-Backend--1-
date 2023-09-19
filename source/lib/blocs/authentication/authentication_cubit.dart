@@ -6,83 +6,60 @@ import 'package:listar_flutter_pro/repository/repository.dart';
 import 'package:listar_flutter_pro/utils/utils.dart';
 
 class AuthenticationCubit extends Cubit<AuthenticationState> {
-  AuthenticationCubit() : super(AuthenticationState.loading);
+  final UserRepository _userRepository;
+
+  AuthenticationCubit(this._userRepository) : super(AuthenticationState.loading);
 
   Future<void> onCheck() async {
-    ///Notify
     emit(AuthenticationState.loading);
 
-    ///Event load user
     UserModel? user = await AppBloc.userCubit.onLoadUser();
 
     if (user != null) {
-      ///Attach token push
-      Application.device?.token = await Utils.getDeviceToken();
-
-      ///Save user
-      await AppBloc.userCubit.onSaveUser(user);
-
-      ///Valid token server
-      final result = await UserRepository.validateToken();
-
+      final result = await _userRepository.validateToken();
       if (result) {
-        ///Load wishList
-        AppBloc.wishListCubit.onLoad();
-
-        ///Fetch user
-        AppBloc.userCubit.onFetchUser();
-
-        ///Notify
         emit(AuthenticationState.success);
       } else {
-        ///Logout
-        onClear();
+        emit(AuthenticationState.fail);
       }
     } else {
-      ///Notify
       emit(AuthenticationState.fail);
     }
   }
 
   Future<void> onSave(UserModel user) async {
-    ///Notify
     emit(AuthenticationState.loading);
-
-    ///Event Save user
     await AppBloc.userCubit.onSaveUser(user);
-
-    ///Load wishList
     AppBloc.wishListCubit.onLoad();
-
-    /// Notify
     emit(AuthenticationState.success);
   }
 
   void onClear() {
-    /// Notify
     emit(AuthenticationState.fail);
-
-    ///Delete user
     AppBloc.userCubit.onDeleteUser();
   }
 
-Future<void> requestOTP(String email) async {
-  final result = await UserRepository.requestOTP(email);
-  if (result) {
-    emit(AuthenticationState.otpRequested);
-  } else {
-    emit(AuthenticationState.otpRequestFailed);
+  Future<bool> requestOTP(String email) async {
+    emit(AuthenticationState.loading);
+    final result = await _userRepository.requestOTP(email);
+    if (result) {
+      emit(AuthenticationState.otpRequested);
+      return true;
+    } else {
+      emit(AuthenticationState.otpRequestFailed);
+      return false;
+    }
   }
-}
 
-Future<void> verifyOTP(String email, String otp) async {
-  final result = await UserRepository.verifyOTP(email, otp);
-  if (result) {
-    emit(AuthenticationState.otpVerified);
-  } else {
-    emit(AuthenticationState.otpVerificationFailed);
+  Future<bool> verifyOTP(String email, String otp) async {
+    emit(AuthenticationState.loading);
+    final result = await _userRepository.verifyOTP(email, otp);
+    if (result) {
+      emit(AuthenticationState.otpVerified);
+      return true;
+    } else {
+      emit(AuthenticationState.otpVerificationFailed);
+      return false;
+    }
   }
-}
-
-
 }

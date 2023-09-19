@@ -4,6 +4,8 @@ import 'package:listar_flutter_pro/api/api.dart';
 import 'package:listar_flutter_pro/blocs/bloc.dart';
 import 'package:listar_flutter_pro/configs/config.dart';
 import 'package:listar_flutter_pro/models/model.dart';
+import 'package:http/http.dart' as http;
+
 
 class UserRepository {
   ///Fetch api login

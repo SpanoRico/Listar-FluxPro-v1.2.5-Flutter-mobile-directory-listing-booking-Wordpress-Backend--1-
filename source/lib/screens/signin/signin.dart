@@ -53,33 +53,34 @@ class _SignInState extends State<SignIn> {
   }
 
   ///On login
-  void _login() async {
+void _login() async {
     Utils.hiddenKeyboard(context);
     setState(() {
-      _errorID = UtilValidator.validate(_textIDController.text);
-      _errorPass = UtilValidator.validate(_textPassController.text);
+        _errorID = UtilValidator.validate(_textIDController.text);
+        _errorPass = UtilValidator.validate(_textPassController.text);
     });
     if (_errorID == null && _errorPass == null) {
-      AppBloc.loginCubit.onLogin(
-        username: _textIDController.text,
-        password: _textPassController.text,
-      );
-    }
-    if (_errorID == null && _errorPass == null) {
-      AppBloc.loginCubit.onLogin(
-        username: _textIDController.text,
-        password: _textPassController.text,
-      );
-      // Ici, vérifiez la réponse du serveur pour voir si un OTP est nécessaire
-      bool otpRequired = true; // Ceci est juste un exemple, vous devriez vérifier la réponse réelle du serveur
-      if (otpRequired) {
+        // Demander l'OTP après avoir validé les identifiants
         Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => OTPScreen(email: _textIDController.text)),
+            context,
+            MaterialPageRoute(builder: (context) => OTPScreen(email: _textIDController.text)),
         );
-      }
     }
-  }
+}
+
+  //void _login() async {
+  //  Utils.hiddenKeyboard(context);
+  //  setState(() {
+  //    _errorID = UtilValidator.validate(_textIDController.text);
+  //    _errorPass = UtilValidator.validate(_textPassController.text);
+  //  });
+  //  if (_errorID == null && _errorPass == null) {
+  //    AppBloc.loginCubit.onLogin(
+  //      username: _textIDController.text,
+  //      password: _textPassController.text,
+  //    );
+  //  }
+  //}
 
   @override
   Widget build(BuildContext context) {
@@ -92,23 +93,9 @@ class _SignInState extends State<SignIn> {
       ),
       body: BlocListener<LoginCubit, LoginState>(
         listener: (context, login) {
-            if (state == LoginState.success) {
-                // Ici, vérifiez si un OTP est nécessaire
-                bool otpRequired = true; // Ceci est juste un exemple, vous devriez vérifier la réponse réelle du serveur
-                if (otpRequired) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => OTPScreen(email: _textIDController.text)),
-                    );
-                } else {
-                    Navigator.pop(context);
-                }
-            } else if (state == LoginState.fail) {
-                // Gérez l'échec de la connexion ici, par exemple en affichant un message d'erreur
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Échec de la connexion. Veuillez réessayer."))
-                );
-            }
+          if (login == LoginState.success) {
+            Navigator.pop(context, widget.from);
+          }
         },
         child: SafeArea(
           child: Container(

@@ -12,10 +12,29 @@ class OTPScreen extends StatefulWidget {
 
 class _OTPScreenState extends State<OTPScreen> {
   final TextEditingController _otpController = TextEditingController();
+  bool _isLoading = false;
 
-  void _submitOTP() {
+  void _submitOTP() async {
+    setState(() {
+      _isLoading = true;
+    });
+
     final otp = _otpController.text;
-    AppBloc.authenticationCubit.verifyOTP(widget.email, otp);
+    final isSuccess = await AppBloc.authenticationCubit.verifyOTP(widget.email, otp);
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (isSuccess) {
+      // Rediriger vers l'écran principal ou tout autre écran approprié
+      Navigator.pushReplacementNamed(context, '/home'); // Remplacez '/home' par la route appropriée
+    } else {
+      // Afficher un message d'erreur
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Invalid or expired OTP')),
+      );
+    }
   }
 
   @override
@@ -35,10 +54,12 @@ class _OTPScreenState extends State<OTPScreen> {
               ),
             ),
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _submitOTP,
-              child: Text('Submit'),
-            )
+            _isLoading
+                ? CircularProgressIndicator()
+                : ElevatedButton(
+                    onPressed: _submitOTP,
+                    child: Text('Submit'),
+                  )
           ],
         ),
       ),
